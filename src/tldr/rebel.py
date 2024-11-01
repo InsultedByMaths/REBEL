@@ -131,19 +131,22 @@ class Args:
     """The batch size per GPU (HF's `per_device_train_batch_size` * `gradient_accumulation_steps`)"""
 
     # other args
-    base_model: str = "models/sft_tldr_pythia_1_4b"
+    # base_model: str = "models/sft_tldr_pythia_1_4b"
+    base_model: str = "EleutherAI/pythia-2.8b-deduped"
     """the name of the pretrained model to use"""
     offload: bool = False
     """Whether to offload ref policy and reward model to CPU"""
-    reward_model_path: str = "models/rm_sft_tldr_pythia_1_4b"
+    # reward_model_path: str = "models/rm_sft_tldr_pythia_1_4b"
+    reward_model_path: str = "vwxyzjn/EleutherAI_pythia-2.8b-deduped__reward__tldr"
     """the name of the pretrained model to use"""
-    sft_model_path: str = "models/sft_tldr_pythia_1_4b"
+    # sft_model_path: str = "models/sft_tldr_pythia_1_4b"
+    sft_model_path: str = "vwxyzjn/EleutherAI_pythia-2.8b-deduped__sft__tldr"
     """the name of the pretrained model to use"""
     dropout_layer_keys: List[str] = field(
         default_factory=lambda: ["attn_pdrop", "embd_pdrop", "resid_pdrop", "summary_first_dropout"]
     )
     """Which layers to apply dropout to"""
-    output_dir: str = "models/rebel_tldr_pythia_1_4b"
+    output_dir: str = "/n/holyscratch01/kdbrantley_lab/npeng/models/rebel_tldr_pythia_2_8b"
     """Where to save the model"""
     lora_rank: int = 1024
     """the rank of the lora matrix"""

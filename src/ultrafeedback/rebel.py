@@ -55,7 +55,7 @@ class RewardHParams:
 
 @dataclass
 class REBELHParams:
-    num_updates: tyro.conf.Suppress[int] = 1000
+    num_updates: tyro.conf.Suppress[int] = 31250 # 1000
     noptepochs: int = 4
     whiten_rewards: bool = False
     shift_mean: bool = False
@@ -74,7 +74,7 @@ class TaskHParams:
     reward_reg: float = 1000
 
     # LM params
-    temperature: float = 0.5
+    temperature: float = 1 # 0.5
 
 
 @dataclass
@@ -106,7 +106,7 @@ class Args:
     # optimizer args
     eps: float = 1e-8
     """the epsilon value for the optimizer"""
-    lr: float = 1e-7
+    lr: float = 3e-7 # 1e-7
 
     weight_decay: float = 1e-6
     """the learning rate"""
@@ -115,11 +115,11 @@ class Args:
     scheduler: str = "linear" # might be worth with 
     warm_up_steps: int = 0
 
-    gradient_accumulation_steps: int = 2
+    gradient_accumulation_steps: int = 4 # 2
     """The number of gradient accumulation steps"""
-    per_device_train_batch_size: int = 2
+    per_device_train_batch_size: int = 1 # 2
     """The micro batch size per GPU (HF's `per_device_train_batch_size`)"""
-    per_device_eval_batch_size: int = 16
+    per_device_eval_batch_size: int = 8 # 16
     """per rank eval batch size"""
     per_device_reward_batch_size: int = 2
     """per device reward batch size"""
@@ -127,27 +127,27 @@ class Args:
     """The total number of episodes in the dataset"""
 
     # optional args filled while running
-    world_size: Optional[int] = 4
+    world_size: Optional[int] = 8 # 4
     """The number of processes (GPUs) to use"""
-    batch_size: Optional[int] = 512
+    batch_size: Optional[int] = 32 # 512
     """The batch size across devices (HF's `per_device_train_batch_size` * `world_size` * `gradient_accumulation_steps`)"""
-    local_rollout_forward_batch_size: int = 16
+    local_rollout_forward_batch_size: int = 32 # 16
     """per rank no grad forward pass in the rollout phase"""
-    local_batch_size: Optional[int] = 128
+    local_batch_size: Optional[int] = 4 # 128
     """The batch size per GPU (HF's `per_device_train_batch_size` * `gradient_accumulation_steps`)"""
 
     # other args
     base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
     """the name of the pretrained model to use"""
-    offload: bool = True
+    offload: bool = False # True
     """Whether to offload ref policy and reward model to CPU"""
-    reward_model: str = "openbmb/Eurus-RM-7b"
+    reward_model: str = "openbmb/Eurus-RM-7b" # "sfairXC/FsfairX-LLaMA3-RM-v0.1"
     """the name of the trained reward model to use"""
     dropout_layer_keys: List[str] = field(
         default_factory=lambda: ["attn_pdrop", "embd_pdrop", "resid_pdrop", "summary_first_dropout"]
     )
     """Which layers to apply dropout to"""
-    output_dir: str = "models/rebel_ultrafeedback"
+    output_dir: str = "/n/holyscratch01/kdbrantley_lab/npeng/models/rebel_ultrafeedback"
     """Where to save the model"""
     num_layers_unfrozen: int = 4
     """number of layers to train"""

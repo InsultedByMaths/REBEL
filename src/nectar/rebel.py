@@ -148,7 +148,7 @@ class Args:
         default_factory=lambda: ["attn_pdrop", "embd_pdrop", "resid_pdrop", "summary_first_dropout"]
     )
     """Which layers to apply dropout to"""
-    output_dir: str = "models/rebel_nectar"
+    output_dir: str = "/n/holyscratch01/kdbrantley_lab/npeng/models/rebel_nectar"
     """Where to save the model"""
     num_layers_unfrozen: int = 4
     """number of layers to train"""
