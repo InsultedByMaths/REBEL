@@ -1,0 +1,14 @@
+query,finetuned_response,finetuned_reward,finetuned_logprob,base_logprob,pretrained_response,pretrained_reward
+"In this task, you are given a second sentence. Your task is to generate the first sentence on the same topic but incoherent and inconsistent with the second sentence.
+
+Q: Additionally , some groups may contain other specialists , such as a heavy weapons or language expert .
+
+A: Each squad member is specially trained as a weapons expert , medic , combat engineer or communications expert , respectively .
+****
+Q: However , the General Accounting Office identified 125 countries that received U.S. training and assistance for their police forces during fiscal year 1990 at a cost of at least $117 million .
+
+A: No government agency is in charge of calculating the cost .
+****
+Q: But his frozen body was found in the ice in Charlotte ( Rochester ) early the next spring by Silas Hudson .
+
+A:","：His prized cheese collection inadvertently sparked flight inspirations for Steve Strange, leading him to embark on a mystical glacier expedition the previous autumn in Montana.",0.05712890625,-131.2526397705078,-170.47232055664062,A: The man who discovered the frozen body was actually a time-traveling alien named Zorvath from the planet Zorgon.,0.0576171875

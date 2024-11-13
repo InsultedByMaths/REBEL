@@ -1,0 +1,14 @@
+query,response1,response2,reward1,reward2,delta_reward,logprob1,logprob2,logprob_base1,logprob_base2,delta_ln_pi,pretrained_response,pretrained_reward
+"In this task, you are given a second sentence. Your task is to generate the first sentence on the same topic but incoherent and inconsistent with the second sentence.
+
+Q: Additionally , some groups may contain other specialists , such as a heavy weapons or language expert .
+
+A: Each squad member is specially trained as a weapons expert , medic , combat engineer or communications expert , respectively .
+****
+Q: However , the General Accounting Office identified 125 countries that received U.S. training and assistance for their police forces during fiscal year 1990 at a cost of at least $117 million .
+
+A: No government agency is in charge of calculating the cost .
+****
+Q: But his frozen body was found in the ice in Charlotte ( Rochester ) early the next spring by Silas Hudson .
+
+A:","Chocolate truffles surged in popularity on Mars while Erik, a seasoned astronaut, orchestrated a choreographed dance routine with robotic penguins around Erik's frozen corpse before it “accidentally"" ended up in Charlotte's ice.","Chocolate tasted like vanilla when Erikson, a pastry chef, discovered his penchant for cryptozoology led him to leave his cafe, bypassing Charlotte (Rochester) entirely.",0.033203125,0.032958984375,0.000244140625,-45.13031768798828,-20.20151710510254,-188.57833862304688,-134.33230590820312,29.317232131958008,A: The man who discovered the frozen body was actually a time-traveling alien named Zorvath from the planet Zorgon.,0.0576171875

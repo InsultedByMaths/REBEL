@@ -13,10 +13,9 @@ from deepspeed.utils.zero_to_fp32 import get_fp32_state_dict_from_zero_checkpoin
 
 @dataclass
 class Args:
-    model_dir: str = '/n/holyscratch01/kdbrantley_lab/zhaolin/ultrafeedback_runs/rebel_armo_OneBatch_newprob_full_lr=3e-7_eta=1e3_bs=128_iter_1_555134_1723089445'
-    repo_name: str = "GitBag/rebel_ultrafeedback_armo_OneBatch_newprob_full_lr_3e-7_eta_1e6_bs_128_iter_1_1723089445"
+    model_dir: str = '/n/holyscratch01/kdbrantley_lab/npeng/ultrafeedback_runs/ultrafeedback_rebel_555134_1731032966/'
+    repo_name: str = "InsultedByMathematics/rebel_ultrafeedback_eta_1e6"
     base_model: str = 'meta-llama/Meta-Llama-3-8B-Instruct'
-
 
 if __name__ == '__main__':
 

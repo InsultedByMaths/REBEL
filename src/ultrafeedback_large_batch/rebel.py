@@ -20,7 +20,7 @@ import deepspeed
 from accelerate import Accelerator, InitProcessGroupKwargs
 from accelerate.state import AcceleratorState
 from accelerate.utils import gather_object
-from datasets import load_dataset, DatasetDict
+from datasets import load_dataset
 from rich.console import Console
 from rich.pretty import pprint
 from torch.utils.data import DataLoader
@@ -47,10 +47,10 @@ from datetime import timedelta
 
 @dataclass
 class REBELHParams:
-    num_updates: tyro.conf.Suppress[int] = 1000
+    num_updates: tyro.conf.Suppress[int] = 468
     whiten_rewards: bool = False
     shift_mean: bool = False
-    eta: float = 1.0
+    eta: float = 1e6
 
 
 @dataclass
@@ -59,7 +59,7 @@ class TaskHParams:
     query_dataset: str = "GitBag/llama3-ultrafeedback-armo-1024"
     test_dataset: str = "GitBag/llama3-ultrafeedback-armo-1024-test"
     cluster: str = "harvard"
-    response_length: int = 2048
+    response_length: int = 1024
     temperature: float = 0.8
 
 
@@ -90,32 +90,28 @@ class Args:
     """Which optimizer to use"""
     warmup_ratio: float = 0.1
     """warmup ratio"""
-    start_idx: int = 0
-    """dataset start idx"""
-    end_idx: int = -1
-    """dataset end idx"""
 
-    gradient_accumulation_steps: int = 8
+    gradient_accumulation_steps: int = 16
     """The number of gradient accumulation steps"""
     per_device_train_batch_size: int = 1
     """The micro batch size per GPU (HF's `per_device_train_batch_size`)"""
-    per_device_eval_batch_size: int = 4
+    per_device_eval_batch_size: int = 1
     """per rank eval batch size"""
-    total_episodes: int = 1000000
+    total_episodes: int = 60000
     """The total number of episodes in the dataset"""
 
     # optional args filled while running
-    world_size: Optional[int] = 4
+    world_size: Optional[int] = 8
     """The number of processes (GPUs) to use"""
-    batch_size: Optional[int] = 512
+    batch_size: Optional[int] = 128
     """The batch size across devices (HF's `per_device_train_batch_size` * `world_size` * `gradient_accumulation_steps`)"""
-    local_batch_size: Optional[int] = 128
+    local_batch_size: Optional[int] = 16
     """The batch size per GPU (HF's `per_device_train_batch_size` * `gradient_accumulation_steps`)"""
 
-    # other args
+    # other args 
     base_model: str = "meta-llama/Meta-Llama-3-8B-Instruct"
     """the name of the pretrained model to use"""
-    output_dir: str = "/n/holyscratch01/kdbrantley_lab/zhaolin/ultrafeedback_runs"
+    output_dir: str = "/n/holyscratch01/kdbrantley_lab/npeng/ultrafeedback_runs"
     """Where to save the model"""
     task: TaskHParams = field(default_factory=TaskHParams)
     rebel: REBELHParams = field(default_factory=REBELHParams)
@@ -312,9 +308,6 @@ if __name__ == '__main__':
                                                             "llama_reject_tokens", "reject_reward", "reject_logprob"])
         recompute_log = True
 
-    if args.end_idx != -1:
-        dataset = dataset.select(range(args.start_idx, args.end_idx))
-
     if accelerator.is_main_process:
         pprint(policy.config)
 
@@ -347,6 +340,8 @@ if __name__ == '__main__':
         validation_dataset = validation_dataset.with_format("torch", columns=["llama_prompt_tokens", 
                                                                               "llama_chosen_tokens", "chosen_reward", "chosen_logprob",
                                                                               "llama_reject_tokens", "reject_reward", "reject_logprob"])
+        if accelerator.is_main_process:
+            validation_dataset.push_to_hub(args.task.test_dataset + '_' + args.task.cluster)
 
         accelerator.print('gathering logprob')
         chosen_logprob, reject_logprob = [], []
@@ -360,12 +355,7 @@ if __name__ == '__main__':
                                                         "llama_chosen_tokens", "chosen_reward", "chosen_logprob",
                                                         "llama_reject_tokens", "reject_reward", "reject_logprob"])
         if accelerator.is_main_process:
-            assert args.task.test_dataset == args.task.query_dataset
-            temp = DatasetDict({
-                "train_prefs" : dataset,
-                "test_prefs"  : validation_dataset,
-            })
-            temp.push_to_hub(args.task.query_dataset + '_' + args.task.cluster)
+            dataset.push_to_hub(args.task.query_dataset + '_' + args.task.cluster)
 
     dataloader = DataLoader(dataset, batch_size=args.local_batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size=args.per_device_eval_batch_size, shuffle=False)

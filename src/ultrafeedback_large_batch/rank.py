@@ -6,6 +6,7 @@ from datasets import load_dataset, DatasetDict
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModelForCausalLM
 from typing import Dict, List
+import pdb
 
 torch.set_printoptions(threshold=10_000)
 
@@ -19,7 +20,7 @@ def parse_arguments():
     parser.add_argument("--prompts", type=str, default="GitBag/llama3-ultrafeedback")
     parser.add_argument("--chosen", type=str, default="bon")
     parser.add_argument("--reject", type=str, default="won")
-    parser.add_argument("--maxlen", type=int, default=2048)
+    parser.add_argument("--maxlen", type=int, default=1024)
     parser.add_argument("--maxlen_prompt", type=int, default=1024)
     parser.add_argument("--pairs", type=int, default=5)
     parser.add_argument("--temperature", type=float, default=0.8)
